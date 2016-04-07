@@ -7,6 +7,7 @@ import time
 import threading
 import picamera
 from PIL import Image
+import os
 
 # Create a pool of image processors
 done = False
@@ -33,7 +34,7 @@ class ImageProcessor(threading.Thread):
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
                     r, g, b = image.getpixel((180, 10))
-                    print("(" + str(r) + "," + str(g) + "," + str(b) + ")")
+                    os.system("ola_set_dmx -u 0 -d 0," + str(r) + "," + str(g) + "," + str(b))
                     # Set done to True if you want the script to terminate
                     # at some point
                     #done=True
