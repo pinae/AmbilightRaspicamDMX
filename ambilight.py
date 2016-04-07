@@ -7,7 +7,6 @@ import time
 import threading
 import picamera
 from PIL import Image
-import os
 from dmx import DmxBus
 
 # Create a pool of image processors
@@ -74,11 +73,16 @@ def shutdown():
         processor.join()
 
 with picamera.PiCamera() as camera:
-    pool = [ImageProcessor() for i in range(4)]
+    pool += [ImageProcessor() for i in range(4)]
     camera.resolution = (640, 480)
     camera.framerate = 30
     camera.start_preview()
-    time.sleep(2)
+    time.sleep(1.2)
+    camera.shutter_speed = camera.exposure_speed
+    camera.exposure_mode = 'off'
+    g = camera.awb_gains
+    camera.awb_mode = 'off'
+    camera.awb_gains = g
     camera.capture_sequence(streams(), use_video_port=True)
 
 shutdown()
