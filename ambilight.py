@@ -8,11 +8,13 @@ import threading
 import picamera
 from PIL import Image
 import os
+from dmx import DmxBus
 
 # Create a pool of image processors
 done = False
 lock = threading.Lock()
 pool = []
+dmx_bus = DmxBus()
 
 
 class ImageProcessor(threading.Thread):
@@ -33,8 +35,8 @@ class ImageProcessor(threading.Thread):
                     self.stream.seek(0)
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
-                    r, g, b = image.getpixel((180, 10))
-                    os.system("ola_set_dmx -u 0 -d 0," + str(r) + "," + str(g) + "," + str(b))
+                    r, g, b = image.getpixel((320, 240))
+                    dmx_bus.set_channels({1: r, 2: b, 3: g})
                     # Set done to True if you want the script to terminate
                     # at some point
                     #done=True
