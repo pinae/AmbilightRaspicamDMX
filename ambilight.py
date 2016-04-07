@@ -35,7 +35,7 @@ class ImageProcessor(threading.Thread):
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
                     r, g, b = image.getpixel((320, 240))
-                    dmx_bus.set_channels({1: r, 2: b, 3: g})
+                    dmx_bus.set_channels({1: r, 2: g, 3: b})
                     # Set done to True if you want the script to terminate
                     # at some point
                     #done=True
