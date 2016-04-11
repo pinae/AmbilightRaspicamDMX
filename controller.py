@@ -62,7 +62,7 @@ def main_loop():
                      modes[mode][ceil(state) % len(modes[mode])][1] * (1 - (state - trunc(state))),
                      modes[mode][trunc(state) % len(modes[mode])][2] * (state - trunc(state)) +
                      modes[mode][ceil(state) % len(modes[mode])][2] * (1 - (state - trunc(state))))
-            dmx_bus.set_channels({1: color[0], 2: color[1], 3: color[2]})
+            dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
             state += 0.01
             print(str(mode) + ": " + str(state) + " ... color: " + str(color))
         time.sleep(0.05)
