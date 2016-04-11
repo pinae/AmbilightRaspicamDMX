@@ -69,6 +69,8 @@ def main_loop():
                      modes[mode][upper][2] * phase)
             dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
             state += 0.01
+        if IO.input(12) and IO.input(13):
+            dmx_bus.set_channels({1: 0, 2: 0, 3: 0})
         time.sleep(0.05)
 
 
