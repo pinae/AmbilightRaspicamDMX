@@ -8,6 +8,7 @@ import threading
 import picamera
 from PIL import Image
 from dmx import DmxBus
+from multiprocessing.queues import Empty
 
 # Create a pool of image processors
 done = False
@@ -41,7 +42,7 @@ class ImageProcessor(threading.Thread):
                     # Terminate if True is in the queue
                     if not self.queue.empty() and self.queue.get(block=False):
                         done = True
-                except self.queue.Empty:
+                except Empty:
                     done = False
                 finally:
                     # Reset the stream and event
