@@ -41,6 +41,8 @@ class ImageProcessor(threading.Thread):
                     # Terminate if True is in the queue
                     if not self.queue.empty() and self.queue.get(block=False):
                         done = True
+                except self.queue.Empty:
+                    done = False
                 finally:
                     # Reset the stream and event
                     self.stream.seek(0)
