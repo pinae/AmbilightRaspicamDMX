@@ -4,6 +4,7 @@ from __future__ import division, print_function, unicode_literals
 
 from PIL import Image
 import numpy as np
+from multiprocessing import Queue
 
 
 # The mask image is based on a grey image with 100% red for the left part of the image, 100% green for the top,
@@ -17,13 +18,15 @@ masks = {
 }
 
 
-def analyze(image):
+def analyze(image, queue):
     data = np.array(image)
     averages = dict()
     for key in masks.keys():
         averages[key] = np.average(data[masks[key]], axis=0)
-    return averages
+    queue.put(averages)
 
 if __name__ == "__main__":
     im = Image.open("test.jpg")
-    print(analyze(im))
+    q = Queue()
+    analyze(im, q)
+    print(q.get())

@@ -10,13 +10,15 @@ from PIL import Image
 from dmx import DmxBus
 from analyze_image import analyze
 from multiprocessing.queues import Empty
-from multiprocessing import Queue
+from multiprocessing import Process, Queue
 
 # Create a pool of image processors
 done = False
 lock = threading.Lock()
 pool = []
 dmx_bus = None
+analyzers = []
+analyzers_queue = Queue()
 
 
 class ImageProcessor(threading.Thread):
@@ -38,22 +40,25 @@ class ImageProcessor(threading.Thread):
                     self.stream.seek(0)
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
-                    color = analyze(image)
-                    if dmx_bus:
-                        dmx_bus.set_channels({
-                            1: int(round(color['right'][0])),
-                            2: int(round(color['right'][1])),
-                            3: int(round(color['right'][2])),
-                            6: int(round(color['top'][0])),
-                            7: int(round(color['top'][1])),
-                            8: int(round(color['top'][2])),
-                            11: int(round(color['left'][0])),
-                            12: int(round(color['left'][1])),
-                            13: int(round(color['left'][2])),
-                            16: int(round(color['bottom'][0])),
-                            17: int(round(color['bottom'][1])),
-                            18: int(round(color['bottom'][2]))
-                        })
+                    analyzers.append(Process(target=analyze, args=(image, analyzers_queue)))
+                    if not analyzers_queue.empty():
+                        color = analyzers_queue.get()
+                        analyzers.pop(0).join()
+                        if dmx_bus:
+                            dmx_bus.set_channels({
+                                1: int(round(color['right'][0])),
+                                2: int(round(color['right'][1])),
+                                3: int(round(color['right'][2])),
+                                6: int(round(color['top'][0])),
+                                7: int(round(color['top'][1])),
+                                8: int(round(color['top'][2])),
+                                11: int(round(color['left'][0])),
+                                12: int(round(color['left'][1])),
+                                13: int(round(color['left'][2])),
+                                16: int(round(color['bottom'][0])),
+                                17: int(round(color['bottom'][1])),
+                                18: int(round(color['bottom'][2]))
+                            })
                     # Terminate if True is in the queue
                     if not self.queue.empty() and self.queue.get(block=False):
                         done = True
