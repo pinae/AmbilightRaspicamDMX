@@ -12,7 +12,7 @@ water = 1
 spectrum = 2
 modes = {
     lava: [(255, 0, 0), (128, 128, 0), (208, 48, 0), (138, 118, 0)],
-    water: [(0, 0, 255), (0, 128, 128), (0, 30, 225), (0, 148, 108)],
+    water: [(0, 0, 255), (0, 128, 128), (10, 30, 215), (0, 148, 108)],
     spectrum: [(0, 255, 0), (0, 128, 128), (0, 0, 255), (128, 0, 128), (255, 0, 0), (128, 128, 0)]
 }
 dmx_bus = DmxBus()
@@ -61,7 +61,6 @@ def main_loop():
             if upper == lower:
                 upper = (upper+1) % len(modes[mode])
             phase = state - trunc(state)
-            print(str(lower)+":"+str(upper)+": "+str(phase))
             color = (modes[mode][lower][0] * (1 - phase) +
                      modes[mode][upper][0] * phase,
                      modes[mode][lower][1] * (1 - phase) +
@@ -69,8 +68,7 @@ def main_loop():
                      modes[mode][lower][2] * (1 - phase) +
                      modes[mode][upper][2] * phase)
             dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
-            state += 0.05
-            print(str(mode) + ": " + str(state) + " ... color: " + str(color))
+            state += 0.01
         time.sleep(0.05)
 
 
