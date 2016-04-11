@@ -82,7 +82,7 @@ def start(assigned_dmx_bus):
         pool += [ImageProcessor() for _ in range(4)]
         camera.resolution = (640, 480)
         camera.framerate = 30
-        camera.start_preview()
+        #camera.start_preview()
         time.sleep(1.2)
         camera.shutter_speed = camera.exposure_speed
         camera.exposure_mode = 'off'

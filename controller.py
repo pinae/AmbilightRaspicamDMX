@@ -34,6 +34,7 @@ def start_ambilight():
 
 def stop_ambilight():
     if ambilight_is_running:
+        ambilight.done = True
         ambilight.shutdown()
         print("Ambilight stopped.")
 
