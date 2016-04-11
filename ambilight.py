@@ -17,8 +17,9 @@ dmx_bus = None
 
 
 class ImageProcessor(threading.Thread):
-    def __init__(self):
+    def __init__(self, queue):
         super(ImageProcessor, self).__init__()
+        self.queue = queue
         self.stream = io.BytesIO()
         self.event = threading.Event()
         self.terminated = False
@@ -37,9 +38,9 @@ class ImageProcessor(threading.Thread):
                     r, g, b = image.getpixel((320, 240))
                     if dmx_bus:
                         dmx_bus.set_channels({1: r, 2: g, 3: b})
-                    # Set done to True if you want the script to terminate
-                    # at some point
-                    #done=True
+                    # Terminate if True is in the queue
+                    if not self.queue.empty() and self.queue.get(block=False):
+                        done = True
                 finally:
                     # Reset the stream and event
                     self.stream.seek(0)
@@ -74,12 +75,12 @@ def shutdown():
         processor.join()
 
 
-def start(assigned_dmx_bus):
+def start(assigned_dmx_bus, queue):
     with picamera.PiCamera() as camera:
         global pool
         global dmx_bus
         dmx_bus = assigned_dmx_bus
-        pool += [ImageProcessor() for _ in range(4)]
+        pool += [ImageProcessor(queue) for _ in range(4)]
         camera.resolution = (640, 480)
         camera.framerate = 30
         #camera.start_preview()

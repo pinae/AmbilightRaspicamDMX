@@ -6,7 +6,9 @@ import time
 import ambilight
 from dmx import DmxBus
 from math import trunc, ceil
-ambilight_is_running = False
+from multiprocessing import Process, Queue
+ambilight_process = None
+ambilight_queue = Queue()
 lava = 0
 water = 1
 spectrum = 2
@@ -27,15 +29,21 @@ def init():
 
 
 def start_ambilight():
-    if not ambilight_is_running:
-        ambilight.start(dmx_bus)
+    global ambilight_process
+    global ambilight_queue
+    if not ambilight_process:
+        ambilight_process = Process(target=ambilight.start, args=(dmx_bus, ambilight_queue))
+        ambilight_process.start()
         print("Ambilight started.")
 
 
 def stop_ambilight():
-    if ambilight_is_running:
-        ambilight.done = True
-        ambilight.shutdown()
+    global ambilight_process
+    global ambilight_queue
+    if ambilight_process:
+        ambilight_queue.put(True)
+        ambilight_process.join(500)
+        ambilight_process = None
         print("Ambilight stopped.")
 
 
