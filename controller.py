@@ -58,7 +58,7 @@ def main_loop():
                 state = 0.0
             lower = trunc(state) % len(modes[mode])
             upper = ceil(state) % len(modes[mode])
-            if not upper % len(modes[mode]) > lower % len(modes[mode]):
+            if upper == lower:
                 upper = (upper+1) % len(modes[mode])
             phase = state - trunc(state)
             print(str(lower)+":"+str(upper)+": "+str(phase))
