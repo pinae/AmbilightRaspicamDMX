@@ -41,10 +41,10 @@ class ImageProcessor(threading.Thread):
                     color = analyze(image)
                     if dmx_bus:
                         dmx_bus.set_channels({
-                            1: color['right'][0], 2: color['right'][0], 3: color['right'][0],
-                            6: color['top'][0], 7: color['top'][0], 8: color['top'][0],
-                            11: color['left'][0], 12: color['left'][0], 13: color['left'][0],
-                            16: color['bottom'][0], 17: color['bottom'][0], 18: color['bottom'][0]
+                            1: color['right'][0], 2: color['right'][1], 3: color['right'][2],
+                            6: color['top'][0], 7: color['top'][1], 8: color['top'][2],
+                            11: color['left'][0], 12: color['left'][1], 13: color['left'][2],
+                            16: color['bottom'][0], 17: color['bottom'][1], 18: color['bottom'][2]
                         })
                     # Terminate if True is in the queue
                     if not self.queue.empty() and self.queue.get(block=False):
