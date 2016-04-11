@@ -45,15 +45,18 @@ def main_loop():
         else:
             stop_ambilight()
         if IO.input(12) and not IO.input(13):
+            if not mode:
+                mode = spectrum
+                state = 0.0
             if IO.input(15) and not IO.input(16) and mode != lava:
                 mode = lava
-                state = 0
+                state = 0.0
             if IO.input(15) and IO.input(16) and mode != water:
                 mode = water
-                state = 0
+                state = 0.0
             if not IO.input(15) and IO.input(16) and mode != spectrum:
                 mode = spectrum
-                state = 0
+                state = 0.0
             color = (modes[mode][trunc(state) % len(modes[mode])][0] * (state - trunc(state)) +
                      modes[mode][trunc(state) % len(modes[mode])][0] * (1 - (state - trunc(state))),
                      modes[mode][trunc(state) % len(modes[mode])][1] * (state - trunc(state)) +
