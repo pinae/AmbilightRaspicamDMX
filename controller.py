@@ -53,12 +53,12 @@ def get_color_from_mode_state(mode, state):
     if upper == lower:
         upper = (upper + 1) % len(modes[mode])
     phase = state - trunc(state)
-    return (modes[mode][lower][0] * (1 - phase) +
-            modes[mode][upper][0] * phase,
-            modes[mode][lower][1] * (1 - phase) +
-            modes[mode][upper][1] * phase,
-            modes[mode][lower][2] * (1 - phase) +
-            modes[mode][upper][2] * phase)
+    return (int(round(modes[mode][lower][0] * (1 - phase) +
+                      modes[mode][upper][0] * phase)),
+            int(round(modes[mode][lower][1] * (1 - phase) +
+                      modes[mode][upper][1] * phase)),
+            int(round(modes[mode][lower][2] * (1 - phase) +
+                      modes[mode][upper][2] * phase)))
 
 
 def main_loop():
