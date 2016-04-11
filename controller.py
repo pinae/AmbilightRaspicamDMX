@@ -3,6 +3,9 @@
 from __future__ import division, print_function, unicode_literals
 import RPi.GPIO as IO
 import time
+lava = 0
+water = 1
+spectrum = 2
 
 
 def init():
@@ -13,9 +16,27 @@ def init():
     IO.setup(16, IO.IN)
 
 
+def start_ambilight():
+    print("Amilight started.")
+
+
+def stop_ambilight():
+    print("Ambilight stopped.")
+
+
 def main_loop():
     while True:
-        print([IO.input(12), IO.input(13), IO.input(15), IO.input(16)])
+        if not IO.input(12) and IO.input(13):
+            start_ambilight()
+        else:
+            stop_ambilight()
+        if IO.input(12) and not IO.input(13):
+            mode = spectrum
+            if IO.input(15) and not IO.input(16):
+                mode = lava
+            if IO.input(15) and IO.input(16):
+                mode = water
+            print(mode)
         time.sleep(0.05)
 
 
