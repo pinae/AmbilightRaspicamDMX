@@ -47,6 +47,20 @@ def stop_ambilight():
         print("Ambilight stopped.")
 
 
+def get_color_from_mode_state(mode, state):
+    lower = trunc(state) % len(modes[mode])
+    upper = ceil(state) % len(modes[mode])
+    if upper == lower:
+        upper = (upper + 1) % len(modes[mode])
+    phase = state - trunc(state)
+    return (modes[mode][lower][0] * (1 - phase) +
+            modes[mode][upper][0] * phase,
+            modes[mode][lower][1] * (1 - phase) +
+            modes[mode][upper][1] * phase,
+            modes[mode][lower][2] * (1 - phase) +
+            modes[mode][upper][2] * phase)
+
+
 def main_loop():
     mode = spectrum
     state = 0.0
@@ -65,18 +79,18 @@ def main_loop():
             if not IO.input(15) and IO.input(16) and mode != spectrum:
                 mode = spectrum
                 state = 0.0
-            lower = trunc(state) % len(modes[mode])
-            upper = ceil(state) % len(modes[mode])
-            if upper == lower:
-                upper = (upper+1) % len(modes[mode])
-            phase = state - trunc(state)
-            color = (modes[mode][lower][0] * (1 - phase) +
-                     modes[mode][upper][0] * phase,
-                     modes[mode][lower][1] * (1 - phase) +
-                     modes[mode][upper][1] * phase,
-                     modes[mode][lower][2] * (1 - phase) +
-                     modes[mode][upper][2] * phase)
-            dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
+            color = {
+                'right': get_color_from_mode_state(mode, state),
+                'top': get_color_from_mode_state(mode, state+0.5),
+                'left': get_color_from_mode_state(mode, state+1),
+                'bottom': get_color_from_mode_state(mode, state+1.5)
+            }
+            dmx_bus.set_channels({
+                1: color['right'][0], 2: color['right'][0], 3: color['right'][0],
+                6: color['top'][0], 7: color['top'][0], 8: color['top'][0],
+                11: color['left'][0], 12: color['left'][0], 13: color['left'][0],
+                16: color['bottom'][0], 17: color['bottom'][0], 18: color['bottom'][0]
+            })
             state += 0.01
         if IO.input(12) and IO.input(13):
             dmx_bus.set_channels({1: 0, 2: 0, 3: 0})

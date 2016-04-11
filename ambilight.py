@@ -8,6 +8,7 @@ import threading
 import picamera
 from PIL import Image
 from dmx import DmxBus
+from analyze_image import analyze
 from multiprocessing.queues import Empty
 
 # Create a pool of image processors
@@ -36,9 +37,14 @@ class ImageProcessor(threading.Thread):
                     self.stream.seek(0)
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
-                    r, g, b = image.getpixel((320, 240))
+                    color = analyze(image)
                     if dmx_bus:
-                        dmx_bus.set_channels({1: r, 2: g, 3: b})
+                        dmx_bus.set_channels({
+                            1: color['right'][0], 2: color['right'][0], 3: color['right'][0],
+                            6: color['top'][0], 7: color['top'][0], 8: color['top'][0],
+                            11: color['left'][0], 12: color['left'][0], 13: color['left'][0],
+                            16: color['bottom'][0], 17: color['bottom'][0], 18: color['bottom'][0]
+                        })
                     # Terminate if True is in the queue
                     if not self.queue.empty() and self.queue.get(block=False):
                         done = True
@@ -86,7 +92,7 @@ def start(assigned_dmx_bus, queue):
         pool += [ImageProcessor(queue) for _ in range(4)]
         camera.resolution = (640, 480)
         camera.framerate = 30
-        #camera.start_preview()
+        camera.start_preview()
         time.sleep(1.2)
         camera.shutter_speed = camera.exposure_speed
         camera.exposure_mode = 'off'
