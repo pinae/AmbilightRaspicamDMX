@@ -13,7 +13,7 @@ from dmx import DmxBus
 done = False
 lock = threading.Lock()
 pool = []
-dmx_bus = DmxBus()
+dmx_bus = None
 
 
 class ImageProcessor(threading.Thread):
@@ -35,7 +35,8 @@ class ImageProcessor(threading.Thread):
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
                     r, g, b = image.getpixel((320, 240))
-                    dmx_bus.set_channels({1: r, 2: g, 3: b})
+                    if dmx_bus:
+                        dmx_bus.set_channels({1: r, 2: g, 3: b})
                     # Set done to True if you want the script to terminate
                     # at some point
                     #done=True
@@ -72,17 +73,25 @@ def shutdown():
         processor.terminated = True
         processor.join()
 
-with picamera.PiCamera() as camera:
-    pool += [ImageProcessor() for i in range(4)]
-    camera.resolution = (640, 480)
-    camera.framerate = 30
-    camera.start_preview()
-    time.sleep(1.2)
-    camera.shutter_speed = camera.exposure_speed
-    camera.exposure_mode = 'off'
-    g = camera.awb_gains
-    camera.awb_mode = 'off'
-    camera.awb_gains = g
-    camera.capture_sequence(streams(), use_video_port=True)
 
-shutdown()
+def start(assigned_dmx_bus):
+    with picamera.PiCamera() as camera:
+        global pool
+        global dmx_bus
+        dmx_bus = assigned_dmx_bus
+        pool += [ImageProcessor() for _ in range(4)]
+        camera.resolution = (640, 480)
+        camera.framerate = 30
+        camera.start_preview()
+        time.sleep(1.2)
+        camera.shutter_speed = camera.exposure_speed
+        camera.exposure_mode = 'off'
+        g = camera.awb_gains
+        camera.awb_mode = 'off'
+        camera.awb_gains = g
+        camera.capture_sequence(streams(), use_video_port=True)
+
+
+if __name__ == "__main__":
+    start(DmxBus())
+    shutdown()
