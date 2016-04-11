@@ -56,6 +56,9 @@ def main_loop():
             if not IO.input(15) and IO.input(16) and mode != spectrum:
                 mode = spectrum
                 state = 0.0
+            print(trunc(state) % len(modes[mode]))
+            print(ceil(state) % len(modes[mode]))
+            print(state - trunc(state))
             color = (modes[mode][trunc(state) % len(modes[mode])][0] * (state - trunc(state)) +
                      modes[mode][ceil(state) % len(modes[mode])][0] * (1 - (state - trunc(state))),
                      modes[mode][trunc(state) % len(modes[mode])][1] * (state - trunc(state)) +
