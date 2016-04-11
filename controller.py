@@ -15,7 +15,6 @@ modes = {
     water: [(0, 0, 255), (0, 255, 234)],
     spectrum: [(0, 255, 0), (0, 128, 128), (0, 0, 255), (128, 0, 128), (255, 0, 0), (128, 128, 0)]
 }
-mode = None
 dmx_bus = DmxBus()
 
 
@@ -40,15 +39,14 @@ def stop_ambilight():
 
 
 def main_loop():
+    mode = spectrum
+    state = 0.0
     while True:
         if not IO.input(12) and IO.input(13):
             start_ambilight()
         else:
             stop_ambilight()
         if IO.input(12) and not IO.input(13):
-            if not mode:
-                mode = spectrum
-                state = 0.0
             if IO.input(15) and not IO.input(16) and mode != lava:
                 mode = lava
                 state = 0.0
