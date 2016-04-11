@@ -1,7 +1,7 @@
-raspi_width=58;
-raspi_length=90;
-whole_length=136;
-raspi_hole_positions=[[5, 4], [53, 4], [5, 64], [53, 64]];
+raspi_width=61;
+raspi_length=91;
+whole_length=139;
+raspi_hole_positions=[[6, 5], [6+49, 5], [6, 5+58], [6+49, 5+58]];
 depth=37;
 wall=3;
 camera_holes=[[-10.5, 0], [10.5, 0], [-10.5, -12.5], [10.5, -12.5]];
@@ -89,7 +89,7 @@ module bottom() {
     for(pos=raspi_hole_positions) {
       translate([pos[0], pos[1], -1]) {
         cylinder(h=7, d=3, $fn=16);
-        cylinder(h=2.5, d=6.5, $fn=6);
+        cylinder(h=3.5, d=6.5, $fn=6);
       }
     }
     for(i=[raspi_width-5, 5]) {
@@ -150,8 +150,8 @@ module bottom() {
         }
       }
     }
-    translate([raspi_width-1, 8, wall]) {
-      cube([wall+2, 10.5, 7.5]);
+    translate([raspi_width-1, 7, wall]) {
+      cube([wall+2, 12.5, 7.5]);
     }
     translate([raspi_width+wall/2, 8+10.5/2, wall+7.5/2+depth/2]) {
       cube([wall, 20, depth-wall], center=true);
@@ -287,20 +287,20 @@ module top() {
       cube([wall+2, 10.5, 7.5]);
     }
     translate([raspi_width/2, raspi_length/2, depth+1.5*wall]) {
-      cube([8, 8, wall+2], center=true);
+      cube([8.3, 8.3, wall+2], center=true);
     }
     for(hole=camera_holes) {
       translate([raspi_width/2+hole[0], raspi_length/2+hole[1], depth+wall-1]) {
         cylinder(h=wall+2, d=2, $fn=16);
       }
     }
-    translate([raspi_width/2, 10, depth+wall-1]) {
+    /*translate([raspi_width/2, 10, depth+wall-1]) {
       cylinder(h=wall+2, d=switch_hole_diameter, $fn=32);
-    }
+    }*/
     translate([11, 10, depth+wall-1]) {
       cylinder(h=wall+2, d=switch_hole_diameter, $fn=32);
     }
-    for(i=[0, 1, 2]) {
+    for(i=[0]) {
       translate([11, 25+i*10, depth+wall-1]) {
         cylinder(h=wall+2, d=button_hole_diameter, $fn=32);
       }
@@ -311,4 +311,4 @@ module top() {
 bottom();
 //color([0.8, 0.2, 0.2]) top();
 
-//rotate([0, 180, 0]) translate([-2*wall-2-2*raspi_width, 0, -depth-2*wall]) top();
+rotate([0, 180, 0]) translate([-2*wall-2-2*raspi_width, 0, -depth-2*wall]) top();
