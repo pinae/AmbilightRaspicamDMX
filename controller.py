@@ -60,16 +60,14 @@ def main_loop():
             upper = ceil(state) % len(modes[mode])
             if not upper > lower:
                 upper += 1
-            print(lower)
-            print(upper)
             phase = state - trunc(state)
-            print(phase)
-            color = (modes[mode][lower][0] * phase +
-                     modes[mode][upper][0] * (1 - phase),
-                     modes[mode][lower][1] * phase +
-                     modes[mode][upper][1] * (1 - phase),
-                     modes[mode][lower][2] * phase +
-                     modes[mode][upper][2] * (1 - phase))
+            print(str(lower)+":"+str(upper)+": "+str(phase))
+            color = (modes[mode][lower][0] * (1 - phase) +
+                     modes[mode][upper][0] * phase,
+                     modes[mode][lower][1] * (1 - phase) +
+                     modes[mode][upper][1] * phase,
+                     modes[mode][lower][2] * (1 - phase) +
+                     modes[mode][upper][2] * phase)
             dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
             state += 0.01
             print(str(mode) + ": " + str(state) + " ... color: " + str(color))
