@@ -10,6 +10,7 @@ from PIL import Image
 from dmx import DmxBus
 from analyze_image import analyze
 from multiprocessing.queues import Empty
+from multiprocessing import Queue
 
 # Create a pool of image processors
 done = False
@@ -103,5 +104,5 @@ def start(assigned_dmx_bus, queue):
 
 
 if __name__ == "__main__":
-    start(DmxBus())
+    start(DmxBus(), Queue())
     shutdown()
