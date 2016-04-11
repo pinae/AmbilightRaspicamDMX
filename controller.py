@@ -56,15 +56,20 @@ def main_loop():
             if not IO.input(15) and IO.input(16) and mode != spectrum:
                 mode = spectrum
                 state = 0.0
-            print(trunc(state) % len(modes[mode]))
-            print(ceil(state) % len(modes[mode]))
-            print(state - trunc(state))
-            color = (modes[mode][trunc(state) % len(modes[mode])][0] * (state - trunc(state)) +
-                     modes[mode][ceil(state) % len(modes[mode])][0] * (1 - (state - trunc(state))),
-                     modes[mode][trunc(state) % len(modes[mode])][1] * (state - trunc(state)) +
-                     modes[mode][ceil(state) % len(modes[mode])][1] * (1 - (state - trunc(state))),
-                     modes[mode][trunc(state) % len(modes[mode])][2] * (state - trunc(state)) +
-                     modes[mode][ceil(state) % len(modes[mode])][2] * (1 - (state - trunc(state))))
+            lower = trunc(state) % len(modes[mode])
+            upper = ceil(state) % len(modes[mode])
+            if not upper > lower:
+                upper += 1
+            print(lower)
+            print(upper)
+            phase = state - trunc(state)
+            print(phase)
+            color = (modes[mode][lower][0] * phase +
+                     modes[mode][upper][0] * (1 - phase),
+                     modes[mode][lower][1] * phase +
+                     modes[mode][upper][1] * (1 - phase),
+                     modes[mode][lower][2] * phase +
+                     modes[mode][upper][2] * (1 - phase))
             dmx_bus.set_channels({1: round(color[0]), 2: round(color[1]), 3: round(color[2])})
             state += 0.01
             print(str(mode) + ": " + str(state) + " ... color: " + str(color))
