@@ -41,6 +41,7 @@ class ImageProcessor(threading.Thread):
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
                     analyzers.append(Process(target=analyze, args=(image, analyzers_queue)))
+                    analyzers[-1].start()
                     if not analyzers_queue.empty():
                         color = analyzers_queue.get()
                         analyzers.pop(0).join()
