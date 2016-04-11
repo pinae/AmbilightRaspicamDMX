@@ -58,10 +58,10 @@ def main_loop():
                 state = 0.0
             lower = trunc(state) % len(modes[mode])
             upper = ceil(state) % len(modes[mode])
-            if not upper > lower:
+            if not upper % len(modes[mode]) > lower % len(modes[mode]):
                 upper = (upper+1) % len(modes[mode])
             phase = state - trunc(state)
-            print(str(state)+"  "+str(lower)+":"+str(upper)+": "+str(phase))
+            print(str(lower)+":"+str(upper)+": "+str(phase))
             color = (modes[mode][lower][0] * (1 - phase) +
                      modes[mode][upper][0] * phase,
                      modes[mode][lower][1] * (1 - phase) +
