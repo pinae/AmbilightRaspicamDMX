@@ -7,7 +7,7 @@ from multiprocessing import Queue
 
 
 def analyze(image, queue):
-    left_pixel = image.get_pixel((150, 240))
+    left_pixel = image.getpixel((150, 240))
     queue.put({
         'left': left_pixel,
         'top': (0, 0, 0),
