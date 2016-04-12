@@ -8,7 +8,7 @@ import threading
 import picamera
 from PIL import Image
 from dmx import DmxBus
-from analyze_image import analyze
+from numpy_masked_analyze import analyze
 from multiprocessing.queues import Empty
 from multiprocessing import Process, Queue
 
