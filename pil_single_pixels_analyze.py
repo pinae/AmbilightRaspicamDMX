@@ -16,7 +16,7 @@ def analyze(image, queue):
     })
 
 if __name__ == "__main__":
-    im = Image.open("test.jpg")
+    im = Image.open("test.jpg").convert('RGB')
     q = Queue()
     analyze(im, q)
     print(q.get())
