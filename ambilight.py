@@ -82,6 +82,7 @@ class ImageProcessor(threading.Thread):
 
     def shutdown(self):
         self.analyzer_process.join()
+        print("Analyzer stopped.")
 
 
 def streams():
@@ -107,6 +108,7 @@ def shutdown():
         processor.shutdown()
         processor.terminated = True
         processor.join()
+    print("Shutdown finished.")
 
 
 def start(assigned_dmx_bus, queue):
