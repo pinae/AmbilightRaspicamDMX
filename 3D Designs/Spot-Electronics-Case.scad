@@ -1,4 +1,15 @@
 wall = 3;
+right_side = true;
+
+mainboard_diameter = 87;
+mainboard_hole_distance = 60;
+mainboard_hole_position = (mainboard_hole_distance/2)/cos(30);
+transformer_width = 85.5;
+transformer_depth = 55;
+transformer_height = 42.5;
+transformer_hole_distance = 73;
+transformer_hole_diameter = 4;
+height = transformer_height+1*wall+2.5;
 
 module dip_panel() {
   dip_holes_distance = 47.5;
@@ -49,9 +60,9 @@ module XLR_panel() {
   hole_position = sqrt((hole_distance/2*hole_distance/2)/2);
   connector_position = (xlr_module_width-connector_distance)/2;
   difference() {
-    cube([xlr_module_width, 35, wall]);
+    cube([xlr_module_width, 35+wall, wall]);
     for(i=[connector_position, connector_position+connector_distance]) {
-      translate([i, 35/2, -1]) {
+      translate([i, 35/2+wall, -1]) {
         cylinder(d=connector_diameter, h=wall+2, $fn=48);
         for(j=[-1, 1]) {
           translate([j*hole_position, j*-1*hole_position, 0]) {
@@ -67,13 +78,6 @@ module XLR_panel() {
 }
 
 module case() {
-  mainboard_diameter = 87;
-  transformer_width = 85.5;
-  transformer_depth = 55;
-  transformer_height = 42.5;
-  transformer_hole_distance = 73;
-  transformer_hole_diameter = 4;
-  height = transformer_height+1*wall+2.5;
   difference() {
     union() {
       translate([0, mainboard_diameter/2+transformer_depth/2, height/2]) {
@@ -85,11 +89,11 @@ module case() {
           cube([58.7, mainboard_diameter+wall, 35]);
         }
       }
-      translate([-58.7/2, -mainboard_diameter/2, height-35]) {
+      translate([-58.7/2, -mainboard_diameter/2, height-35-wall]) {
         rotate([90, 0, 0]) {
           XLR_panel();
         }
-        translate([-wall, 0, -wall]) {
+        translate([-wall, 0, 0]) {
           cube([58.7+2*wall, mainboard_diameter, 35+wall]);
         }
       }
@@ -103,6 +107,40 @@ module case() {
               }
             }
           }
+        }
+      }
+      if(!right_side) {
+        translate([30, -30, 0]) {
+          cube([30, 10, 33]);
+        }
+        translate([31.7, -5.8, 0]) {
+          rotate([0, 0, -45]) {
+            cube([30, 10, 33]);
+          }
+        }
+        translate([50, -45, 0]) {
+          cube([10, 25, 33]);
+        }
+      }
+      if(right_side) {
+        translate([-60, -30, 0]) {
+          cube([30, 10, 33]);
+        }
+        translate([-38.8, 1.2, 0]) {
+          rotate([0, 0, -45-90]) {
+            cube([30, 10, 33]);
+          }
+        }
+        translate([-60, -45, 0]) {
+          cube([10, 25, 33]);
+        }
+      }
+    }
+    for(i=[-1, 1]) {
+      translate([i*40, -37, 24]) {
+        rotate([0, i*90, 0]) {
+          cylinder(d=5, h=30, $fn=16);
+          cylinder(d=sqrt(8*8+4*4), h=14.3, $fn=6);
         }
       }
     }
@@ -121,7 +159,68 @@ module case() {
     translate([-58.7/2, -mainboard_diameter/2, height-35]) {
       cube([58.7, mainboard_diameter, 35]);
     }
+    for(i=[0, 120, 240]) {
+      rotate([0, 0, i]) {
+        translate([0, mainboard_hole_position, -1]) {
+          cylinder(d=3, h=wall+3.5, $fn=16);
+          cylinder(d=6.5, h=3.5, $fn=6);
+        }
+      }
+    }
+    translate([transformer_width/2-11, mainboard_diameter/2+transformer_depth-1, height-11-wall]) {
+      rotate([-90, 0, 0]) {
+        cylinder(d=16, h=wall+2, $fn=32);
+      }
+    }
   }
 }
 
 case();
+difference() {
+  translate([0, -87/2-wall, 5.1]) {
+    cube([58.7+2*wall, 2*wall, 10.2], center=true);
+  }
+  translate([-58.7/2, -87/2-wall, 0]) {
+    cube([58.7, wall+1, 10]);
+  }
+  cylinder(d=87+2*wall+0.5, h=10, $fn=128);
+  for(i=[-1, 1]) {
+    translate([i*58.7/2, -87/2, 0]) {
+      cylinder(d=2*wall, h=10, $fn=16);
+    }
+  }
+}
+
+module top() {
+  union() {
+    difference() {
+      union() {
+        cylinder(d=mainboard_diameter+2*wall, h=wall, $fn=128);
+        for(i=[-1, 1]) {
+          translate([i*58.7/2, -mainboard_diameter/2, 0]) {
+            cylinder(d=2*wall, h=wall, $fn=16);
+          }
+        }
+        translate([-58.7/2, -mainboard_diameter/2-wall, 0]) {
+          cube([58.7, wall, wall]);
+        }
+        translate([-58.7/2-wall, -mainboard_diameter/2, 0]) {
+          cube([58.7+2*wall, mainboard_diameter+wall, wall]);
+        }
+        translate([0, mainboard_diameter/2+transformer_depth/2, wall/2]) {
+          cube([transformer_width+2*wall, transformer_depth+2*wall, wall], center=true);
+        }
+      }
+      cube([55, 20, 2*wall+1], center=true);
+    }
+    translate([-55/2, -20/2, 0]) {
+      dip_panel();
+    }
+  }
+}
+
+color([0.2, 0.2, 0.8]) {
+  translate([0, 0, height]) {
+    top();
+  }
+}
