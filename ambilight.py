@@ -80,6 +80,9 @@ class ImageProcessor(threading.Thread):
                     with lock:
                         pool.append(self)
 
+    def shutdown(self):
+        self.analyzer_process.join()
+
 
 def streams():
     while not done:
@@ -101,6 +104,7 @@ def shutdown():
     while pool:
         with lock:
             processor = pool.pop()
+        processor.shutdown()
         processor.terminated = True
         processor.join()
 
