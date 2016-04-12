@@ -22,6 +22,8 @@ dmx_bus = None
 def analyze_worker(image_queue, result_queue):
     while True:
         image = image_queue.get()
+        if type(image) is bool and not image:
+            break
         analyze(image, result_queue)
 
 
@@ -81,6 +83,7 @@ class ImageProcessor(threading.Thread):
                         pool.append(self)
 
     def shutdown(self):
+        self.image_queue.put(False)
         self.analyzer_process.join()
         print("Analyzer stopped.")
 
