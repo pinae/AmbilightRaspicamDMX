@@ -17,13 +17,21 @@ done = False
 lock = threading.Lock()
 pool = []
 dmx_bus = None
-analyzers = []
-analyzers_queue = Queue()
+
+
+def analyze_worker(image_queue, result_queue):
+    while True:
+        image = image_queue.get()
+        analyze(image, result_queue)
 
 
 class ImageProcessor(threading.Thread):
     def __init__(self, queue):
         super(ImageProcessor, self).__init__()
+        self.image_queue = Queue()
+        self.result_queue = Queue()
+        self.analyzer_process = Process(target=analyze_worker, args=(self.image_queue, self.result_queue))
+        self.analyzer_process.start()
         self.queue = queue
         self.stream = io.BytesIO()
         self.event = threading.Event()
@@ -40,11 +48,9 @@ class ImageProcessor(threading.Thread):
                     self.stream.seek(0)
                     # Read the image and do some processing on it
                     image = Image.open(self.stream).convert('RGB')
-                    analyzers.append(Process(target=analyze, args=(image, analyzers_queue)))
-                    analyzers[-1].start()
-                    if not analyzers_queue.empty():
-                        color = analyzers_queue.get()
-                        analyzers.pop(0).join()
+                    self.image_queue.put(image)
+                    if not self.result_queue.empty():
+                        color = self.result_queue.get()
                         if dmx_bus:
                             dmx_bus.set_channels({
                                 1: int(round(color['right'][0])),
