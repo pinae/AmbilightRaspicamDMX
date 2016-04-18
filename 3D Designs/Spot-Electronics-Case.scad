@@ -1,5 +1,5 @@
 wall = 3;
-right_side = false;
+right_side = true;
 
 mainboard_diameter = 87;
 mainboard_hole_distance = 60;
@@ -78,7 +78,7 @@ module XLR_panel() {
 }
 
 module support() {
-  support_width = 8;
+  support_width = 10;
   difference() {
     union() {
       translate([0, -support_width/2, -20]) {
@@ -89,8 +89,10 @@ module support() {
       }
     }
     translate([0, 0, -21]) {
-      cylinder(d=3, h=22, $fn=16);
       cylinder(d=6.5, h=19, $fn=6);
+    }
+    translate([0, 0, -1.8]) {
+      cylinder(d=3, h=3, $fn=16);
     }
     translate([-10, 0, -12.5]) {
       rotate([0, 45, 0]) {
@@ -269,6 +271,14 @@ module removable_part() {
       translate([i*58.7/2, -87/2, 0]) {
         cylinder(d=2*wall, h=10, $fn=16);
       }
+    }
+  }
+  for(i=[-1, 1]) {
+    translate([i*(58.7/2+wall)-(i+1)*0.2, -87/2-wall, 0]) {
+      cube([0.4, 14, 10]);
+    }
+    translate([i*20-(i+1)*0.2, -87/2-wall, 0]) {
+      cube([0.4, 7, 10]);
     }
   }
 }
