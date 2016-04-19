@@ -9,30 +9,33 @@ using std::cout;
 using std::endl;
 
 OlaWrapper::OlaWrapper()
+  // Create a new client.
+  :ola_client((ola::client::StreamingClient::Options()))
 {
-    /*unsigned int universe = 0; // universe to use for sending data
-      // turn on OLA logging
-      ola::InitLogging(ola::OLA_LOG_WARN, ola::OLA_LOG_STDERR);
-      ola::DmxBuffer buffer; // A DmxBuffer to hold the data.
-      buffer.Blackout(); // Set all channels to 0
-      // Create a new client.
-      ola::client::StreamingClient ola_client(
-        (ola::client::StreamingClient::Options()));
-      // Setup the client, this connects to the server
-      if (!ola_client.Setup()) {
-        std::cerr << "Setup failed" << endl;
-        exit(1);
-      }
-      // Send 100 frames to the server. Increment slot (channel) 0 each time a
-      // frame is sent.
-      for (unsigned int i = 0; i < 255; i++) {
-        buffer.SetChannel(1, 254-i);
-        if (!ola_client.SendDmx(universe, buffer)) {
-          cout << "Send DMX failed" << endl;
-          exit(1);
-        }
-        usleep(25000); // sleep for 25ms between frames.
-      }
-     */
+  universe = 0; // universe to use for sending data
+  ola::InitLogging(ola::OLA_LOG_WARN, ola::OLA_LOG_STDERR);
+  buffer.Blackout(); // Set all channels to 0
+  // Setup the client, this connects to the server
+  if (!ola_client.Setup()) {
+    std::cerr << "Setup failed" << endl;
+    exit(1);
+  }
 }
 
+void OlaWrapper::setChannel(unsigned int channel, unsigned int value)
+{
+  buffer.SetChannel(channel, value);
+}
+
+void OlaWrapper::blackout()
+{
+  buffer.Blackout();
+}
+
+void OlaWrapper::send()
+{
+  if (!ola_client.SendDmx(universe, buffer)) {
+    cout << "Send DMX failed" << endl;
+    exit(1);
+  }
+}
