@@ -33,7 +33,7 @@ int timespec_subtract(struct timespec *result, struct timespec *x, struct timesp
 
 
 //entry point
-int main(int argc, const char *argv[])
+int old_main(int argc, const char *argv[])
 {
     //should the camera convert frame data from yuv to argb automatically?
     bool do_argb_conversion = true;

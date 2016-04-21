@@ -14,12 +14,17 @@ SOURCES += \
     cameracontrol.cpp \
     graphics.cpp \
     picam.cpp \
-    olawrapper.cpp
+    olawrapper.cpp \
+    ambilight.cpp \
+    controller.cpp \
+    fader.cpp
 
 HEADERS += \
     camera.h \
     cameracontrol.h \
     graphics.h \
     mmalincludes.h \
-    olawrapper.h
+    olawrapper.h \
+    ambilight.h \
+    fader.h
 

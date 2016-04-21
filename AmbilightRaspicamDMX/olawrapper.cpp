@@ -22,7 +22,7 @@ OlaWrapper::OlaWrapper()
   }
 }
 
-void OlaWrapper::setChannel(unsigned int channel, unsigned int value)
+void OlaWrapper::setChannel(uint8_t channel, uint8_t value)
 {
   buffer.SetChannel(channel, value);
 }
