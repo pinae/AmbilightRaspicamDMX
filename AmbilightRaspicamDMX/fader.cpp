@@ -1,48 +1,41 @@
 #include "fader.h"
 #include <math.h>
 
+#include <iostream>
+
 #define RGB(r, g, b) ((r) << 24 | (g) << 16 | (b) << 8)
 
 Fader::Fader()
 {
+  modes[0] = {RGB(0U, 255U, 0U), RGB(0U, 128U, 128U), RGB(0U, 0U, 255U), RGB(128U, 0U, 128U), RGB(255U, 0U, 0U), RGB(128U, 128U, 0U)};
+  modes[1] = {RGB(255U, 0U, 0U), RGB(128U, 128U, 0U), RGB(208U, 48U, 0U), RGB(138U, 118U, 0U)};
+  modes[2] = {RGB(0U, 0U, 255U), RGB(0U, 128U, 128U), RGB(10U, 30U, 215U), RGB(0U, 148U, 108U)};
   state = 0;
-  mode = spectrum;
-  modes = {
-    {RGB(0, 255, 0), RGB(0, 128, 128), RGB(0, 0, 255), RGB(128, 0, 128), RGB(255, 0, 0), RGB(128, 128, 0)},
-    {RGB(255, 0, 0), RGB(128, 128, 0), RGB(208, 48, 0), RGB(138, 118, 0)},
-    {RGB(0, 0, 255), RGB(0, 128, 128), RGB(10, 30, 215), RGB(0, 148, 108)},
-  }
+  mode = 0;
 }
 
-void Fader::step(OlaWrapper* ola)
+void Fader::setRGBChannels(OlaWrapper &ola, uint8_t channelOffset, uint32_t color)
 {
-  uint32_t color = getColorForState(state);
   uint8_t r = color >> 24;
   uint8_t g = color >> 16;
   uint8_t b = color >> 8;
-  ola->setChannel(1, r);
-  ola->setChannel(2, g);
-  ola->setChannel(3, b);
-  color = getColorForState(state+0.5);
-  r = color >> 24;
-  g = color >> 16;
-  b = color >> 8;
-  ola->setChannel(6, r);
-  ola->setChannel(7, g);
-  ola->setChannel(8, b);
-  color = getColorForState(state+1);
-  r = color >> 24;
-  g = color >> 16;
-  b = color >> 8;
-  ola->setChannel(10, r);
-  ola->setChannel(11, g);
-  ola->setChannel(12, b);
+  ola.setChannel(channelOffset, r);
+  ola.setChannel(channelOffset+1, g);
+  ola.setChannel(channelOffset+2, b);
+}
+
+void Fader::step(OlaWrapper &ola)
+{
+  setRGBChannels(ola, 1, getColorForState(state));
+  setRGBChannels(ola, 6, getColorForState(state+0.5));
+  setRGBChannels(ola, 9, getColorForState(state+1));
+  ola.send();
+  state += 0.005;
 }
 
 void Fader::setMode(uint8_t newMode)
 {
   mode = newMode;
-  state = 0;
 }
 
 uint32_t Fader::getColorForState(float state)
