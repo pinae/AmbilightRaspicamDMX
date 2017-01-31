@@ -22,6 +22,12 @@ OlaWrapper::OlaWrapper()
   }
 }
 
+OlaWrapper::~OlaWrapper()
+{
+  blackout();
+  send();
+}
+
 void OlaWrapper::setChannel(uint8_t channel, uint8_t value)
 {
   buffer.SetChannel(channel, value);
