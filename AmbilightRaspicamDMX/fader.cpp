@@ -30,7 +30,7 @@ void Fader::step(OlaWrapper &ola)
   setRGBChannels(ola, 6, getColorForState(state+0.5));
   setRGBChannels(ola, 9, getColorForState(state+1));
   ola.send();
-  state += 0.005;
+  state += 0.002;
 }
 
 void Fader::setMode(uint8_t newMode)
