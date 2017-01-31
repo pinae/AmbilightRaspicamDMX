@@ -38,6 +38,22 @@ public:
 	int ReadFrame(int level, void* buffer, int buffer_size);
 	bool BeginReadFrame(int level, const void* &out_buffer, int& out_buffer_size);
 	void EndReadFrame(int level);
+	//MMAL_PARAM_EXPOSUREMODE_T CCamera::getExposureMode();
+	void CCamera::setExposureMode(MMAL_PARAM_EXPOSUREMODE_T mode);
+	void CCamera::setExposureCompensation(int exposure_compensation);
+	//MMAL_PARAM_AWBMODE_T CCamera::getAwbMode();
+	void CCamera::setAwbMode(MMAL_PARAM_AWBMODE_T mode);
+	void CCamera::setShutterSpeed(int speed_ms);
+	//int CCamera::getBrightness();
+	void CCamera::setBrightness(int brightness);
+	//int CCamera::getContrast();
+	void CCamera::setContrast(int contrast);
+	//int CCamera::getISO();
+	void CCamera::setISO(int iso);
+	//int CCamera::getSaturation();
+	void CCamera::setSaturation(int saturation);
+	//int CCamera::getSharpness();
+	void CCamera::setSharpness(int sharpness);
 
 private:
 	CCamera();
