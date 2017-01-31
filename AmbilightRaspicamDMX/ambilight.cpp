@@ -39,9 +39,9 @@ void Ambilight::step(OlaWrapper &ola)
   const void* frame_data;
   int frame_sz;
   if (cam->BeginReadFrame(0, frame_data, frame_sz)) {
-    setRGBChannels(ola, 1, getPixel(frame_data, 10, 16));
-    setRGBChannels(ola, 6, getPixel(frame_data, 54, 16));
-    setRGBChannels(ola, 9, getPixel(frame_data, 32, 3));
+    setRGBChannels(ola, 1, getPixel(frame_data, 39, 16));
+    setRGBChannels(ola, 6, getPixel(frame_data, 19, 16));
+    setRGBChannels(ola, 9, getPixel(frame_data, 30, 12));
     ola.send();
     cam->EndReadFrame(0);
   }
