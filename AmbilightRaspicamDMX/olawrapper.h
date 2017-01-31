@@ -9,6 +9,7 @@ class OlaWrapper
 {
 public:
     OlaWrapper();
+    ~OlaWrapper();
     void setChannel(uint8_t channel, uint8_t value);
     void blackout();
     void send();
