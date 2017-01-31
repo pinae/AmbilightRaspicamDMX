@@ -59,6 +59,86 @@ CCamera::~CCamera()
 
 }
 
+/*MMAL_PARAM_EXPOSUREMODE_T CCamera::getExposureMode()
+{
+	return raspicamcontrol_get_exposure_mode(CameraComponent);
+}*/
+
+void CCamera::setExposureMode(MMAL_PARAM_EXPOSUREMODE_T mode)
+{
+	raspicamcontrol_set_exposure_mode(CameraComponent, mode);
+}
+
+void CCamera::setExposureCompensation(int exposure_compensation)
+{
+	raspicamcontrol_set_exposure_compensation(CameraComponent, exposure_compensation);
+}
+
+/*MMAL_PARAM_AWBMODE_T CCamera::getAwbMode()
+{
+	return raspicamcontrol_get_awb_mode(CameraComponent);
+}*/
+
+void CCamera::setAwbMode(MMAL_PARAM_AWBMODE_T mode)
+{
+	raspicamcontrol_set_awb_mode(CameraComponent, mode);
+}
+
+void CCamera::setShutterSpeed(int speed_ms)
+{
+	raspicamcontrol_set_shutter_speed(CameraComponent, speed_ms);
+}
+
+/*int CCamera::getBrightness()
+{
+	return raspicamcontrol_get_brightness(CameraComponent);
+}*/
+
+void CCamera::setBrightness(int brightness)
+{
+	raspicamcontrol_set_brightness(CameraComponent, brightness);
+}
+
+/*int CCamera::getContrast()
+{
+	return raspicamcontrol_get_contrast(CameraComponent);
+}*/
+
+void CCamera::setContrast(int contrast)
+{
+	raspicamcontrol_set_brightness(CameraComponent, contrast);
+}
+
+/*int CCamera::getISO()
+{
+	return raspicamcontrol_get_ISO(CameraComponent);
+}*/
+
+void CCamera::setISO(int iso)
+{
+	raspicamcontrol_set_ISO(CameraComponent, iso);
+}
+
+/*int CCamera::getSaturation()
+{
+	return raspicamcontrol_get_saturation(CameraComponent);
+}*/
+
+void CCamera::setSaturation(int saturation)
+{
+	raspicamcontrol_set_saturation(CameraComponent, saturation);
+}
+
+/*int CCamera::getSharpness()
+{
+	return raspicamcontrol_get_sharpness(CameraComponent);
+}*/
+
+void CCamera::setSharpness(int sharpness)
+{
+	raspicamcontrol_set_sharpness(CameraComponent, sharpness);
+}
+
 void CCamera::CameraControlCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer)
 {
 	GCamera->OnCameraControlCallback(port,buffer);
