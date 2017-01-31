@@ -3,12 +3,15 @@
 #include <unistd.h>
 #include "camera.h"
 #include "graphics.h"
+#include "cameracontrol.h"
 
 //#define MAIN_TEXTURE_WIDTH 768
 //#define MAIN_TEXTURE_HEIGHT 432
 
 #define MAIN_TEXTURE_WIDTH 64
 #define MAIN_TEXTURE_HEIGHT 32
+
+#define UNUSED(x) (void)(x)
 
 char tmpbuf[MAIN_TEXTURE_WIDTH * MAIN_TEXTURE_HEIGHT * 4];
 
@@ -33,8 +36,10 @@ int timespec_subtract(struct timespec *result, struct timespec *x, struct timesp
 
 
 //entry point
-int old_main(int argc, const char *argv[])
+int _main(int argc, const char *argv[])
 {
+    UNUSED(argc);
+    UNUSED(argv);
     //should the camera convert frame data from yuv to argb automatically?
     bool do_argb_conversion = true;
 
@@ -45,6 +50,8 @@ int old_main(int argc, const char *argv[])
                                30,
                                1,
                                do_argb_conversion);
+    cam->setExposureMode(MMAL_PARAM_EXPOSUREMODE_AUTO);
+    cam->setAwbMode(MMAL_PARAM_AWBMODE_AUTO);
 
     //create 4 textures of decreasing size
     GfxTexture texture;
@@ -54,6 +61,17 @@ int old_main(int argc, const char *argv[])
     struct timespec t0;
     clock_gettime(CLOCK_REALTIME, &t0);
     for (int i = 0; i < 3000; ++i) {
+        if(i == 100) {
+            cam->setExposureMode(MMAL_PARAM_EXPOSUREMODE_OFF);
+            cam->setAwbMode(MMAL_PARAM_AWBMODE_FLUORESCENT);
+            cam->setISO(100);
+            cam->setBrightness(50);
+            cam->setContrast(0);
+            cam->setSharpness(0);
+            cam->setSaturation(0);
+            cam->setExposureCompensation(0);
+            cam->setShutterSpeed(33333);
+        }
         //lock the chosen frame buffer, and copy it directly into the corresponding open gl texture
         const void* frame_data;
         int frame_sz;
