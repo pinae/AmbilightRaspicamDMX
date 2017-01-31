@@ -7,7 +7,7 @@ INCLUDEPATH += /opt/vc/include \
     /opt/vc/include/interface/vcos/pthreads \
     /opt/vc/include/interface/vmcs_host/linux \
     /opt/vc/include/host_applications/linux/libs/bcm_host/include
-LIBS += -L/opt/vc/lib -lmmal_core -lmmal_util -lmmal_vc_client -lvcos -lbcm_host -lGLESv2 -lEGL -lola -lolacommon -lwiringPi -lcurses
+LIBS += -L/opt/vc/lib -lmmal_core -lmmal_util -lmmal_vc_client -lvcos -lbcm_host -lGLESv2 -lEGL -lola -lolacommon -lwiringPi
 
 SOURCES += \
     camera.cpp \
